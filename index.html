@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Empleados</title>
+</head>
+<body onload="mostrarEmpleados();">
+
+    <table>
+        <tr>
+            <th>Nombre</th>
+            <td><input type="text" name="nombre" id="txtNombre" placeholder="Instertar Nombre"></td>
+        </tr>
+        <tr>
+            <th>Apellido</th>
+            <td><input type="text" name="apellido" id="txtApellido" placeholder="Insertar Apellido"></td>
+        </tr>
+        <tr>
+            <th>Edad</th>
+            <td><input type="number" name="edad" id="intEdad"></td>
+        </tr>
+        <tr>
+            <th>Sueldo</th>
+            <td><input type="number" name="sueldo" id="sueldo"></td>
+        </tr>
+        <tr>
+            <th></th>
+            <td><button onclick="agregarEmpleado();" id="sueldo"> Enviar informacion</button></td>
+        </tr>
+
+    </table>
+
+    <hr>
+    <table id="listarEmpleado">
+        <tr>
+            <thead>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Edad</th>
+                <th>Sueldo</th>
+            </thead>
+        </tr>
+        <tbody id="tbDatos">
+
+        </tbody>
+
+    </table>
+
+
+    <script type="text/javascript">
+
+        function limpiarFormulario(){
+            let campos=document.querySelectorAll("input[type='text'],input[type='number'");
+            for(let x=0;x<campos.length;x++){
+                campos[x].value='';
+            }
+        }
+
+        let empleados=[];
+
+        function agregarEmpleado(){
+
+            let personal=[];
+            personal.push(document.getElementById('txtNombre').value);
+            personal.push(document.getElementById('txtApellido').value);
+            personal.push(document.getElementById('intEdad').value);
+            personal.push(document.getElementById('sueldo').value);
+            /* empleados.push(personal);
+            mostrarEmpleados(); */
+            
+            let validarFormulario=true;
+            for(let x=0;x<personal.length;x++){
+                if(personal[x]==""){
+                    validarFormulario=false;
+                }
+
+            }
+            if(validarFormulario){
+                empleados.push(personal);
+                let datos=JSON.stringify(empleados);
+                localStorage.setItem('listadoEmpleados',datos);
+                limpiarFormulario();
+                mostrarEmpleados();
+
+            }else{
+                alert("Favor de llenar los campos requeridos")
+            }
+        }
+
+        function mostrarEmpleados(){
+            var llenarTabla=document.getElementById("tbDatos");
+            llenarTabla.innerHTML='';
+
+            for(x=0; x<empleados.length;x++){
+                tr=document.createElement('tr');
+                personal=empleados[x];
+                
+                for(y=0; y<personal.length; y++){
+                    celda=personal[y];
+                    td=document.createElement('td');
+                    td.innerHTML=celda;
+                    tr.appendChild(td);
+
+                }
+                llenarTabla.appendChild(tr);
+
+            }
+            
+        }
+
+        datos=localStorage.getItem('listadoEmpleados');
+        if(datos!=""){
+
+            empleados=JSON.parse(datos);
+            mostrarEmpleados();
+        }
+    </script>
+
+</body>
+</html>
